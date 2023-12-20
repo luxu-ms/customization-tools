@@ -22,7 +22,7 @@ setupTasks:
   - task: add-to-env-path
     inputs:
       path: 'C:\Program Files\IronPython 2.7\Scripts'
-  - task: powershell
+  - task: powershell-runas
     inputs:
       command: |
         # install RIDE
