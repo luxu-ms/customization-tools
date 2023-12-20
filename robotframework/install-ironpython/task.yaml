@@ -1,0 +1,24 @@
+# This is a simple powershell command execution task for Dev Box.
+
+name: install-ironpython
+description: Install Ironpython.
+author: Microsoft Corporation
+command: ./main.ps1 -InstallerName {{installerName}} -Version {{version}}
+inputs:
+  installerName:
+    type: string
+    defaultValue: ""
+    required: true
+    description: The name of the IronPython installer
+  version:
+    type: string
+    defaultValue: ""
+    required: true
+    description: The version of IronPython to install
+documentation:
+  notes: This task is used to execute a schedule task
+  examples:
+    - task: install-ironpython
+      inputs:
+        installerName: 'Ironpython.msi'
+        version: '2.7.11'

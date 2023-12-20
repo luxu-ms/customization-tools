@@ -1,0 +1,38 @@
+name: devbox-customization
+image: MicrosoftVisualStudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2
+hostInformation: general_i_8c32gb256ssd_v2
+supportsHibernation: true
+setupTasks:
+  - task: chocolatey
+    inputs: 
+      package: python2
+      version: 2.7.16
+  - task: powershell-runas
+    inputs:
+      command: |
+        Set-Location 'C:\Python27\Scripts'
+        pip install robotframework==3.0
+  - task: install-ironpython
+    inputs:
+      installerName: 'IronPython.msi'
+      version: '2.7.11'
+  - task: add-to-env-path
+    inputs:
+      path: 'C:\Program Files\IronPython 2.7'
+  - task: add-to-env-path
+    inputs:
+      path: 'C:\Program Files\IronPython 2.7\Scripts'
+  - task: powershell
+    inputs:
+      command: |
+        # install RIDE
+        Set-Location 'C:\Python27\Scripts'
+        pip install wxPython==4.0.7
+        pip install robotframework-ride==1.7.3.1
+
+        # install elementtree
+        Set-Location 'C:\Program Files\IronPython 2.7'
+        .\ipy.exe -m pip install https://www.turbogears.org/2.1/downloads/2.1.5/elementtree-1.2.7-20070827-preview.zip
+
+        .\ipy.exe -m pip install robotframework==3.0
+      runAsUser: true
