@@ -1,0 +1,21 @@
+name: install-storage-explorer
+description: Install Azure Storage Explorer.
+author: Microsoft Corporation
+command: ./main.ps1 -InstallerName {{installerName}} -Version {{version}}
+inputs:
+  installerName:
+    type: string
+    defaultValue: "StorageExplorer-windows-x64.exe"
+    required: false
+    description: The name of the Storage Explorer
+  version:
+    type: string
+    defaultValue: ""
+    required: true
+    description: The version of Storage Explorer
+documentation:
+  notes: This task is used to install Azure Storage Explorer
+  examples:
+    - task: install-storage-explorer
+      inputs:
+        version: '1.32.1'
