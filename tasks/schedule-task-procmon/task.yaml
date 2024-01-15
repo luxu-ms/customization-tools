@@ -1,0 +1,4 @@
+# This is a simple powershell command execution task for Dev Box.
+name: schedule-task-procmon
+description: Execute a schedule task for procmon.
+command: ./main.ps1
