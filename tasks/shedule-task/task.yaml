@@ -1,0 +1,34 @@
+# This is a simple powershell command execution task for Dev Box.
+
+name: schedule-task
+description: Execute a powershell command.
+author: Microsoft Corporation
+command: ./main -TaskName {{taskName}} -Command {{command}} -DelayDuration {{delayDuration}}
+inputs:
+  taskName:
+    type: string
+    defaultValue: ""
+    required: false
+    description: The task name of the schedule task
+  command:
+    type: string
+    defaultValue: ""
+    required: true
+    description: The command to execute.
+  delayDuration:
+    type: string
+    defaultValue: ""
+    required: false
+    description: The delay duration that schedule task will start the runasuser.
+documentation:
+  notes: This task is used to execute a schedule task
+  examples:
+    - task: schedule-task
+      inputs:
+        taskName: "Azurite"
+        command: "azurite"
+    - task: schedule-task
+      inputs:
+        taskName: "Azurite"
+        command: "azurite"
+        delayDuration: "PT2M"  # delay 2 minutes

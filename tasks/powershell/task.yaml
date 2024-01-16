@@ -1,0 +1,40 @@
+# This is a simple powershell command execution task for Dev Box.
+
+name: powershell-runas
+description: Execute a powershell command.
+author: Microsoft Corporation
+command: ".\\Run-Command.ps1 -Command {{command}} -WorkingDirectory {{workingDirectory}} -RunAsUser {{runAsUser}} -DelayDuration {{delayDuration}}"
+inputs:
+  command:
+    type: string
+    defaultValue: ""
+    required: true
+    description: The command to execute.
+  workingDirectory:
+    type: string
+    defaultValue: ""
+    required: false
+    description: The working directory to execute the command in.
+  runAsUser:
+    type: boolean
+    defaultValue: false
+    required: false
+    description: execute the command when the user login the devbox at the first time.
+  delayDuration:
+    type: string
+    defaultValue: ""
+    required: false
+    description: The delay duration that schedule task will start the runasuser.
+documentation:
+  notes: This task is used to execute a powershell command.
+  examples:
+    - task: powershell-runas
+      description: print hello world
+      inputs:
+        command: "Write-Host 'hello, world!'"
+    - task: powershell-runas
+      description: run script
+      inputs:
+        command: "choco install -y postman"
+        runAsUser: true
+        DelayDuration: "PT3M"  # delay 3 minutes
