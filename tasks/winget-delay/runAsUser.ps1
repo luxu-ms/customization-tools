@@ -11,5 +11,5 @@ Write-Host "----------------------------------"
 Write-Host "Setting up scheduled tasks..."
 
 Write-Host "Waiting on OneDrive initialization..."
-Start-Sleep -Seconds 120
+Start-Sleep -Seconds 3
 Remove-Item -Path "$($CustomizationScriptsDir)\$($LockFile)"
