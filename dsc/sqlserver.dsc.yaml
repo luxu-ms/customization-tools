@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+properties:
+  configurationVersion: 0.2.0
+  resources:
+   - resource: SqlServerDsc/SqlProtocol
+     id: ChangeSqlProtocol
+     directives:
+       description: Change SqlProtocol
+       allowPrerelease: true
+     settings:
+       InstanceName: 'SQLExpress'
+       ProtocolName: 'TcpIp'
+       Enabled: true
+   - resource: SqlServerDsc/SqlProtocolTcpIp
+     id: ChangeIPAll
+     directives:
+       description: Change IPAll
+       allowPrerelease: true
+     settings:
+       InstanceName: 'SQLExpress'
+       IpAddressGroup: 'IPAll'
+       UseTcpDynamicPort: true
+# How to execute?
+# 1, Install sqlserver and sqlserverdsc module in powershell 5.1
+#    Install-Module -Name SqlServer
+#    Install-Module -Name SqlServerDsc
+# 2, Apply the configuration
+#    winget configure -f .\sqlserver.dsc.yaml --accept-configuration-agreements
