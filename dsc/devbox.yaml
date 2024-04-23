@@ -1,0 +1,7 @@
+# From https://github.com/microsoft/devcenter-examples
+$schema: 1.0
+tasks:
+  - name: winget
+    parameters:
+      downloadUrl: 'https://raw.githubusercontent.com/luxu-ms/customization-tools/main/dsc/sqlserver.dsc.yaml'
+      configurationFile: 'C:\temp\sqlserver.dsc.yaml'
