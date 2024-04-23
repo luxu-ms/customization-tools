@@ -20,10 +20,3 @@ properties:
        InstanceName: 'SQLExpress'
        IpAddressGroup: 'IPAll'
        UseTcpDynamicPort: true
-# How to execute?
-# 1, Install sqlserver and sqlserverdsc module in powershell 5.1
-#    Install-Module -Name SqlServer
-#    Install-Module -Name SqlServerDsc
-# 2, Apply the configuration or apply by winget task configuration file
-#    winget configure -f .\sqlserver.dsc.yaml --accept-configuration-agreements
-#    https://github.com/microsoft/devcenter-catalog/blob/main/Tasks/winget/task.yaml
