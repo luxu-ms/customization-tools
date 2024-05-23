@@ -6,7 +6,7 @@
 username=lyle
 if ! grep -q $username /etc/passwd; then
     NEWUSER=$username
-    sudo useradd --create-home --shell /usr/bin/bash --user-group --groups  adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev --password $(read -sp Password: pw ; echo $pw | openssl passwd -1 -stdin) $NEWUSER
+    sudo useradd --create-home --shell /usr/bin/bash --user-group --groups  adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev --password $(echo '' | openssl passwd -1 -stdin) $NEWUSER
 
     cat <<EOF | sudo tee -a /etc/wsl.conf
 
@@ -50,8 +50,13 @@ MAVEN_FOLDER="$(grep -oP 'apache-maven-[\d\.]+' <<<"$MAVEN_URL")"
 cd /opt/maven && curl -sLo- "$MAVEN_URL" | sudo tar zxf -
 sudo ln -sfn "$MAVEN_FOLDER" current
 
-cd
-
-# Azure CLI
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
+# # Splunk
+# cd ~
+# wget -O splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.2.1/linux/splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz"
+# sudo tar xvzf splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz -C /opt
+# cd /opt/splunk
+# echo 'export SPLUNK_HOME=/opt/splunk' >> ~/.bashrc 
+# source ~/.bashrc
+# sudo ./bin/splunk disable boot-start
+# sudo ./bin/splunk enable boot-start -systemd-managed 1 -user $username -group $username
+# sudo ./bin/splunk start
