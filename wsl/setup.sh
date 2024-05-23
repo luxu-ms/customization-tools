@@ -21,9 +21,6 @@ cat <<EOF | sudo tee -a /etc/wsl.conf
 [interop]
 appendWindowsPath = false
 
-[boot]
-systemd=true
-
 EOF
 
 # install dev dependencies
