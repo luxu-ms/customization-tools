@@ -8,7 +8,7 @@ tasks:
     parameters:
       command: |
         # download the linux distribution
-        $distroFolder = 'C:\Distro'
+        $distroFolder = 'C:\Temp'
         $distroFile = $distroFolder+'\Ubuntu-Splunk.tar'
         New-Item $distroFolder -ItemType Directory -Force
         # $downloadUrl = 'https://stdevboxtools.blob.core.windows.net/distro/Ubuntu-22.04.tar?sp=r&st=2024-04-24T13:06:14Z&se=2024-06-29T21:06:14Z&spr=https&sv=2022-11-02&sr=b&sig=SnaZ2D50vZsK%2BCorxFpGBLndCqbeI7o27IVXmQMR6C8%3D'
@@ -29,7 +29,7 @@ tasks:
         # import wsl distro
         $distroName = 'Ubuntu-22.04'
         $installLocation = 'C:\linux'
-        $distroFile = 'C:\Distro\Ubuntu-Splunk.tar'
+        $distroFile = 'C:\Temp\'+$distroName+'.tar'
         New-Item $installLocation -ItemType Directory -Force
         wsl --import $distroName $installLocation $distroFile 
         wsl -s $distroName
