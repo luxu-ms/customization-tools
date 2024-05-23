@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+properties:
+  configurationVersion: 0.2.0
+  resources:
+   - resource: Microsoft.WinGet.DSC/WinGetPackage
+     id: k6.k6
+     directives:
+       description: Install K6
+       allowPrerelease: true
+     settings:
+       id: k6.k6
+       source: winget
+       version: '0.43.0'
+   - resource: SqlServerDsc/SqlProtocolTcpIp
+     id: DarkMode
+     directives:
+       description: Enable Dark Mode
+       allowPrerelease: true
+     settings:
+       InstanceName: 'MSSQLSERVER'
+       Enabled: true
+       UseTcpDynamicPort: true
