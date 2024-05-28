@@ -1,6 +1,3 @@
-Write-host "=============Maintainence Start============="
-$distroName = "Ubuntu-22.04"
-
 Write-host "=============Shutdown all WSL instances============="
 wsl --shutdown
 
