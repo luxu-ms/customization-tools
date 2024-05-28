@@ -7,7 +7,7 @@ Start-Sleep 60
 $tempDirectory = 'C:\Temp'
 New-Item -Path $tempDirectory -ItemType Directory -Force
 $installPath = Join-Path $tempDirectory 'init-distro.sh'
-(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/luxu-ms/customization-tools/main/wsl/init-distro.sh', $installPath)
+(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/luxu-ms/customization-tools/main/wsl/poc/1-bake-image/init-distro.sh', $installPath)
 wsl -e $installPath
 
 wsl --shutdown
