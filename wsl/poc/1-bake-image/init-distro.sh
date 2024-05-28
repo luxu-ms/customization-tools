@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# wsl --install -d Ubuntu-22.04
 # this will create WSL using root login.
 # the following create a new user and set it as default user
 username=lyle
@@ -23,6 +22,10 @@ appendWindowsPath = false
 
 EOF
 
+cat <<EOF | sudo tee -a /etc/sudoers.d/$username
+$username ALL=(ALL) NOPASSWD:ALL
+EOF
+
 # install dev dependencies
 sudo apt update
 
@@ -43,12 +46,6 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 # install pyenv for Python
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 cd ~/.pyenv && src/configure && make -C src
-
-# maven
-MAVEN_URL="$(curl -sL "https://maven.apache.org/download.cgi" | grep -m1 -oP 'https://[^"]+/apache-maven-[\d\.]+-bin.tar.gz')"
-MAVEN_FOLDER="$(grep -oP 'apache-maven-[\d\.]+' <<<"$MAVEN_URL")"
-cd /opt/maven && curl -sLo- "$MAVEN_URL" | sudo tar zxf -
-sudo ln -sfn "$MAVEN_FOLDER" current
 
 # # Splunk
 # cd ~
