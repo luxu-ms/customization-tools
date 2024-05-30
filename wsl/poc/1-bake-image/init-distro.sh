@@ -47,13 +47,13 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 cd ~/.pyenv && src/configure && make -C src
 
-# # Splunk
-# cd ~
-# wget -O splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.2.1/linux/splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz"
-# sudo tar xvzf splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz -C /opt
-# cd /opt/splunk
-# echo 'export SPLUNK_HOME=/opt/splunk' >> ~/.bashrc 
-# source ~/.bashrc
-# sudo ./bin/splunk disable boot-start
-# sudo ./bin/splunk enable boot-start -systemd-managed 1 -user $username -group $username
-# sudo ./bin/splunk start
+# Splunk
+cd ~
+wget -O splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.2.1/linux/splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz"
+tar xvzf splunk-9.2.1-78803f08aabb-Linux-x86_64.tgz
+sudo mv splunk /opt/
+echo 'export SPLUNK_HOME=/opt/splunk' >> ~/.bashrc 
+source ~/.bashrc
+cd /opt/splunk/bin
+sudo ./splunk start --accept-license --answer-yes --no-prompt --seed-passwd Welcome1
+sudo ./splunk enable boot-start
