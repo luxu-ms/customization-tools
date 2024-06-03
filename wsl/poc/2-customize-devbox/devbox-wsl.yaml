@@ -23,6 +23,9 @@ tasks:
         New-Item -path $env:userprofile -name '.wslconfig' -type 'file' -value \"[wsl2]`r`n\" -Force
         Add-Content -Path $env:userprofile'\.wslconfig' -Value \"firewall=true`r`n\"
 
+        # update wsl
+        wsl --update
+
         # import wsl distro
         $distroName = 'Ubuntu-22.04'
         $installLocation = 'C:\linux'
@@ -30,6 +33,8 @@ tasks:
         New-Item $installLocation -ItemType Directory -Force
         wsl --import $distroName $installLocation $distroFile 
         wsl -s $distroName
+        $defaultUser=lyle
+        wsl -- /bin/bash -c "sudo ./splunk enable boot-start -systemd-managed 1 -user $defaultUser -group $defaultUser"
 
         ########################### Exclude WSL from Windows Defender Start ###########################
         # Find registered WSL environments

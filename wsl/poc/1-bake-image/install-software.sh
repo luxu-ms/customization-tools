@@ -34,4 +34,4 @@ source ~/.bashrc
 cd /opt/splunk/bin
 ./splunk start --accept-license --answer-yes --no-prompt --seed-passwd Welcome1
 ./splunk stop
-sudo ./splunk enable boot-start -systemd-managed 1 -user $defaultUser -group $defaultUser
+
