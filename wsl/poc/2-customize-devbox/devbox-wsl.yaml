@@ -4,6 +4,9 @@ tasks:
   - name: choco
     parameters:
       package: vscode
+  - name: choco
+    parameters:
+      package: docker-desktop
 #userTasks:
   - name: powershell-runas
     description: Admin cannot access wsl, so put the task to user level
@@ -12,6 +15,9 @@ tasks:
       command: |
         # install vscode wsl extension
         code --install-extension ms-vscode-remote.remote-wsl
+
+        # install postman
+        choco install postman -y
 
         # set firewall
         New-Item -path $env:userprofile -name '.wslconfig' -type 'file' -value \"[wsl2]`r`n\" -Force
