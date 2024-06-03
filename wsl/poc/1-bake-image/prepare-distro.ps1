@@ -1,20 +1,20 @@
 # prepare linux distro tar
 $Ubuntu = "Ubuntu-22.04"
-wsl --install -d $Ubuntu
+Write-host "Install WSL distro Ubuntu 22.04"
+wsl --install -d $Ubuntu -n
+ubuntu2204 install --root
 
-Start-Sleep 60
-
+Write-host "Setup the inittial envionrment for WSL distro"
 $tempDirectory = 'C:\Temp'
 New-Item -Path $tempDirectory -ItemType Directory -Force
 $installPath = Join-Path $tempDirectory 'init-distro.sh'
 (new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/luxu-ms/customization-tools/main/wsl/poc/1-bake-image/init-distro.sh', $installPath)
 wsl -e $installPath
 
-wsl --shutdown
 Write-host "Shutdown WSL instance"
-Start-Sleep 30
+wsl --shutdown
 
-Write-host "Epporting WSL distro"
+Write-host "Epport WSL distro"
 wsl --export $Ubuntu "${tempDirectory}\${Ubuntu}.tar"
 
 Write-host "Unregister original WSL distro"
