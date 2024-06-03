@@ -1,8 +1,6 @@
 # prepare linux distro tar
 $Ubuntu = "Ubuntu-22.04"
 $defaultUser = "lyle"
-Write-host "Upate WSL to support Systemd"
-wsl --update
 
 Write-host "Install WSL distro Ubuntu 22.04"
 wsl --install -d $Ubuntu -n
