@@ -14,7 +14,7 @@ wsl -e $installPath
 Write-host "Shutdown WSL instance"
 wsl --shutdown
 
-Write-host "Epport WSL distro"
+Write-host "Export WSL distro"
 wsl --export $Ubuntu "${tempDirectory}\${Ubuntu}.tar"
 
 Write-host "Unregister original WSL distro"
