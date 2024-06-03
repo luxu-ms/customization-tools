@@ -1,5 +1,9 @@
 # prepare linux distro tar
 $Ubuntu = "Ubuntu-22.04"
+
+Write-host "Upate WSL to support Systemd"
+wsl --update
+
 Write-host "Install WSL distro Ubuntu 22.04"
 wsl --install -d $Ubuntu -n
 ubuntu2204 install --root
@@ -9,7 +13,17 @@ $tempDirectory = 'C:\Temp'
 New-Item -Path $tempDirectory -ItemType Directory -Force
 $installPath = Join-Path $tempDirectory 'init-distro.sh'
 (new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/luxu-ms/customization-tools/main/wsl/poc/1-bake-image/init-distro.sh', $installPath)
-wsl -e $installPath
+Set-Location $tempDirectory
+wsl -e './init-distro.sh'
+
+Write-host "Set default user"
+wsl --shutdown
+ubuntu2204 config --default-user lyle
+
+$installPath = Join-Path $tempDirectory 'install-software.sh'
+(new-object net.webclient).DownloadFile('https://raw.githubusercontent.com/luxu-ms/customization-tools/main/wsl/poc/1-bake-image/install-software.sh', $installPath)
+Set-Location $tempDirectory
+wsl -e './install-software.sh'
 
 Write-host "Shutdown WSL instance"
 wsl --shutdown

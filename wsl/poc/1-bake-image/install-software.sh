@@ -25,5 +25,6 @@ sudo mv splunk /opt/
 echo 'export SPLUNK_HOME=/opt/splunk' >> ~/.bashrc 
 source ~/.bashrc
 cd /opt/splunk/bin
-sudo ./splunk start --accept-license --answer-yes --no-prompt --seed-passwd Welcome1
+./splunk start --accept-license --answer-yes --no-prompt --seed-passwd Welcome1
+./splunk stop
 sudo ./splunk enable boot-start -systemd-managed 1 -user lyle -group lyle
