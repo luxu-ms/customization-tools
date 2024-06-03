@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ $# -ne 1 ]]; then
+    echo "Illegal number of parameters. Parameters should equal or greater than 1" >&2
+    exit 1
+fi
+
+defaultUser=$1
+
 # install dev dependencies
 sudo apt update
 
@@ -27,4 +34,4 @@ source ~/.bashrc
 cd /opt/splunk/bin
 ./splunk start --accept-license --answer-yes --no-prompt --seed-passwd Welcome1
 ./splunk stop
-sudo ./splunk enable boot-start -systemd-managed 1 -user lyle -group lyle
+sudo ./splunk enable boot-start -systemd-managed 1 -user $defaultUser -group $defaultUser
