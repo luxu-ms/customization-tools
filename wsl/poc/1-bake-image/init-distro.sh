@@ -22,6 +22,7 @@ appendWindowsPath = false
 
 EOF
 
+# no password for sudo
 cat <<EOF | sudo tee -a /etc/sudoers.d/$username
 $username ALL=(ALL) NOPASSWD:ALL
 EOF
