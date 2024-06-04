@@ -34,7 +34,8 @@ tasks:
         wsl --import $distroName $installLocation $distroFile 
         wsl -s $distroName
         $defaultUser='lyle'
-        wsl -- /bin/bash -c 'sudo ./splunk enable boot-start -systemd-managed 1 -user $defaultUser -group $defaultUser'
+        $command='cd /opt/splunk/bin && sudo sudo ./splunk enable boot-start -systemd-managed 1 -user {0} -group {1}' -f $defaultUser, $defaultUser
+        wsl -- /bin/bash -c $command
 
         ########################### Exclude WSL from Windows Defender Start ###########################
         # Find registered WSL environments
