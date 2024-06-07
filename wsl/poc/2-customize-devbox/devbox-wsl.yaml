@@ -1,5 +1,6 @@
 # From https://github.com/microsoft/devcenter-examples
 $schema: 1.0
+############ Project related Softwares in Dev Box Windows OS ############
 tasks:
   - name: choco
     parameters:
@@ -7,37 +8,38 @@ tasks:
   - name: choco
     parameters:
       package: docker-desktop
-#userTasks:
   - name: powershell-runas
     description: Admin cannot access wsl, so put the task to user level
     parameters:
       runAsUser: true
       command: |
-        # install vscode wsl extension
+        ############ Install WSL related extensions for VS Code ############
         code --install-extension ms-vscode-remote.remote-wsl
 
         # install postman
         choco install postman -y
 
-        # set firewall
-        New-Item -path $env:userprofile -name '.wslconfig' -type 'file' -value \"[wsl2]`r`n\" -Force
-        Add-Content -Path $env:userprofile'\.wslconfig' -Value \"firewall=true`r`n\"
-
-        # update wsl
+        ############ update wsl for generalization limit ############
         wsl --update
 
-        # import wsl distro
+        ############ Import WSL Distro ############
         $distroName = 'Ubuntu-22.04'
         $installLocation = 'C:\linux'
         $distroFile = 'C:\Temp\'+$distroName+'.tar'
         New-Item $installLocation -ItemType Directory -Force
         wsl --import $distroName $installLocation $distroFile 
         wsl -s $distroName
+
+        ############ Setup auto start for splunk ############
         $defaultUser='lyle'
         $command='cd /opt/splunk/bin && sudo sudo ./splunk enable boot-start -systemd-managed 1 -user {0} -group {1}' -f $defaultUser, $defaultUser
         wsl -- /bin/bash -c $command
 
-        ########################### Exclude WSL from Windows Defender Start ###########################
+        ############ Setup Firewall for WSL Distro ############
+        New-Item -path $env:userprofile -name '.wslconfig' -type 'file' -value \"[wsl2]`r`n\" -Force
+        Add-Content -Path $env:userprofile'\.wslconfig' -Value \"firewall=true`r`n\"
+
+        ########################### Exclude Anti-Virus Path ###########################
         # Find registered WSL environments
         $wslPaths = (Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss | ForEach-Object { Get-ItemProperty $_.PSPath}).BasePath
 
@@ -70,4 +72,3 @@ tasks:
             }
           }
         }           
-        ########################### Exclude WSL from Windows Defender End ###########################
