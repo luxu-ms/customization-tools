@@ -5,6 +5,9 @@ tasks:
   - name: choco
     parameters:
       package: vscode
+  - name: winget
+    parameters:
+      package: suse.RancherDesktop
   - name: choco
     parameters:
       package: docker-desktop
