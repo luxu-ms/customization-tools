@@ -333,10 +333,7 @@ if ($RunAsUser -eq "true") {
 # We're running in the provisioning context:
 else {
     Write-Host "Running in the provisioning context"
-    $date = Get-Date -UFormat "-%m-%d-%Y"
-    $tempDir = 'C:\Temp'
-    New-Item -Path $tempDir -ItemType Directory -Force
-    $tempOutFile = "$tempDir\result-$date.out.json"
+    $tempOutFile = [System.IO.Path]::GetTempFileName() + ".out.json"
 
     $mtaFlag = "-MTA"
     if ($PsInstallScope -eq "CurrentUser") {
