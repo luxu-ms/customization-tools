@@ -333,7 +333,7 @@ if ($RunAsUser -eq "true") {
 # We're running in the provisioning context:
 else {
     Write-Host "Running in the provisioning context"
-    $date = Get-Date -UFormat "-%m-%d-%Y-%R"
+    $date = Get-Date -UFormat "-%m-%d-%Y"
     $tempDir = 'C:\Temp'
     New-Item -Path $tempDir -ItemType Directory -Force
     $tempOutFile = "$tempDir\result-$date.out.json"
@@ -353,7 +353,8 @@ else {
             $versionFlag = "-Version '$($Version)'"
         }
 
-        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -ArgumentList "$($mtaFlag) -Command `"Get-WinGetConfiguration -File '$($ConfigurationFile)' | Invoke-WinGetConfiguration -AcceptConfigurationAgreements | Select-Object -ExpandProperty UnitResults | ConvertTo-Json -Depth 10 > $($tempOutFile)`"" -PassThru
+        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -ArgumentList $($mtaFlag), "-Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`"" -PassThru
+        $dummy = $process.Handle # Cache the handle
         $process.WaitForExit()
         $installExitCode = $process.ExitCode
         # read the output file and write it to the console
@@ -378,7 +379,8 @@ else {
     elseif ($ConfigurationFile) {
         Write-Host "Running installation of configuration file: $($ConfigurationFile)"
 
-        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -ArgumentList "$($mtaFlag) -Command `"Get-WinGetConfiguration -File '$($ConfigurationFile)' | Invoke-WinGetConfiguration -AcceptConfigurationAgreements | Select-Object -ExpandProperty UnitResults | ConvertTo-Json -Depth 10 > $($tempOutFile)`"" -PassThru
+        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -ArgumentList $($mtaFlag), "-Command `"Get-WinGetConfiguration -File '$($ConfigurationFile)' | Invoke-WinGetConfiguration -AcceptConfigurationAgreements | Select-Object -ExpandProperty UnitResults | ConvertTo-Json -Depth 10 > $($tempOutFile)`"" -PassThru
+        $dummy = $process.Handle # Cache the handle
         $process.WaitForExit()
         $installExitCode = $process.ExitCode
         # read the output file and write it to the console
