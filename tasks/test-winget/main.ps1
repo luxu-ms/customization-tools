@@ -300,40 +300,23 @@ elseif ($DownloadUrl) {
 function getProcessId($processCreation){
     $timeoutDuration = 120
     $startTime = Get-Date
-    $processId
+    $processId = "-1"
     # Loop until the timeout is reached or process creation is confirmed  
     while ((Get-Date) -lt $startTime.AddSeconds($timeoutDuration)) {  
         try {      
             # Check if processCreation and ProcessId are not null or empty  
             if ($null -ne $processCreation -and $null -ne $processCreation.ProcessId -and $processCreation.ProcessId -ne '') {  
-                Write-Output "Process creation is not null and ProcessId is valid: $($processCreation.ProcessId)"  
-                break  
-            } else {  
-                Write-Output "Process creation or ProcessId is null or empty. Checking again in 1 second..."  
-            }  
+                return $processCreation.ProcessId
+            }
         } catch {  
             Write-Output "Error occurred: $_. Exception.Message"  
         }  
     
         # Wait for 1 second before checking again  
         Start-Sleep -Seconds 1  
-    }  
-    
-    # Check if the loop exited due to timeout  
-    if ((Get-Date) -ge $startTime.AddSeconds($timeoutDuration)) {  
-        Write-Output "Timeout reached. Process creation or ProcessId was not valid within the timeout period."  
-    }  
-    
-    # If process creation was successful, get the process  
-    if ($null -ne $processCreation -and $null -ne $processCreation.ProcessId -and $processCreation.ProcessId -ne '') {  
-        try {  
-            Write-Output "Process retrieved successfully: $($process.ProcessName)"  
-            return $processCreation.ProcessId
-        } catch {  
-            Write-Output "Failed to retrieve process: $_. Exception.Message"  
-        }  
     }
-    return -1
+
+    return $processId
 }
 
 $versionFlag = ""
@@ -391,7 +374,7 @@ else {
 
         $processCreation = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="C:\Program Files\PowerShell\7\pwsh.exe $($mtaFlag) -Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""}
         $processId = getProcessId($processCreation)
-        if($processId -eq -1){
+        if($processId -eq "-1"){
             Write-Error "Failed to get process id"
             exit 1
         }
