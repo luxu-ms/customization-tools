@@ -350,7 +350,7 @@ else {
             $versionFlag = "-Version '$($Version)'"
         }
 
-        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -NoNewWindow -Wait -PassThru -ArgumentList $($mtaFlag), "-Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""
+        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -Verb RunAs -ErrorAction Stop -NoNewWindow -Wait -PassThru -ArgumentList $($mtaFlag), "-Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""
         $installExitCode = $process.ExitCode
         # read the output file and write it to the console
         $unitResults = Get-Content -Path $tempOutFile
