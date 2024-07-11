@@ -333,7 +333,7 @@ if ($RunAsUser -eq "true") {
 # We're running in the provisioning context:
 else {
     Write-Host "Running in the provisioning context"
-    $tempOutFile = [System.IO.Path]::GetTempFileName() + ".out.json"
+    $tempOutFile = "C:\temp\result.txt"
 
     $mtaFlag = "-MTA"
     if ($PsInstallScope -eq "CurrentUser") {
