@@ -297,6 +297,45 @@ elseif ($DownloadUrl) {
     Write-Host "Downloaded configuration to: $($ConfigurationFile)"
 }
 
+function getProcessId($processCreation){
+    $timeoutDuration = 120
+    $startTime = Get-Date
+    $processId
+    # Loop until the timeout is reached or process creation is confirmed  
+    while ((Get-Date) -lt $startTime.AddSeconds($timeoutDuration)) {  
+        try {      
+            # Check if processCreation and ProcessId are not null or empty  
+            if ($null -ne $processCreation -and $null -ne $processCreation.ProcessId -and $processCreation.ProcessId -ne '') {  
+                Write-Output "Process creation is not null and ProcessId is valid: $($processCreation.ProcessId)"  
+                break  
+            } else {  
+                Write-Output "Process creation or ProcessId is null or empty. Checking again in 1 second..."  
+            }  
+        } catch {  
+            Write-Output "Error occurred: $_. Exception.Message"  
+        }  
+    
+        # Wait for 1 second before checking again  
+        Start-Sleep -Seconds 1  
+    }  
+    
+    # Check if the loop exited due to timeout  
+    if ((Get-Date) -ge $startTime.AddSeconds($timeoutDuration)) {  
+        Write-Output "Timeout reached. Process creation or ProcessId was not valid within the timeout period."  
+    }  
+    
+    # If process creation was successful, get the process  
+    if ($null -ne $processCreation -and $null -ne $processCreation.ProcessId -and $processCreation.ProcessId -ne '') {  
+        try {  
+            Write-Output "Process retrieved successfully: $($process.ProcessName)"  
+            return $processCreation.ProcessId
+        } catch {  
+            Write-Output "Failed to retrieve process: $_. Exception.Message"  
+        }  
+    }
+    return -1
+}
+
 $versionFlag = ""
 # We're running as user via scheduled task:
 if ($RunAsUser -eq "true") {
@@ -333,7 +372,7 @@ if ($RunAsUser -eq "true") {
 # We're running in the provisioning context:
 else {
     Write-Host "Running in the provisioning context"
-    $tempOutFile = "C:\temp\result.txt"
+    $tempOutFile = [System.IO.Path]::GetTempFileName() + ".out.json"
 
     $mtaFlag = "-MTA"
     if ($PsInstallScope -eq "CurrentUser") {
@@ -350,24 +389,19 @@ else {
             $versionFlag = "-Version '$($Version)'"
         }
 
-        $installExitCode = -1
-        try { 
-            if($mtaFlag){
-                & "C:\Program Files\PowerShell\7\pwsh.exe" $mtaFlag -Command "Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile) "
-            }else{
-                & "C:\Program Files\PowerShell\7\pwsh.exe" -Command "Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile) "
-            }
-            
-            $installExitCode = 0
-         }
-        catch {
-            Write-Host "###############An error occurred:"
-            Write-Host $_
+        $processCreation = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="C:\Program Files\PowerShell\7\pwsh.exe $($mtaFlag) -Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""}
+        $processId = getProcessId($processCreation)
+        if($processId -eq -1){
+            Write-Error "Failed to get process id"
+            exit 1
         }
-        
+        $process = Get-Process -Id $processId
+        $handle = $process.Handle # cache process.Handle so ExitCode isn't null when we need it below
+        $process.WaitForExit()
+        $installExitCode = $process.ExitCode
         # read the output file and write it to the console
         $unitResults = Get-Content -Path $tempOutFile
-        #Remove-Item -Path $tempOutFile -Force
+        Remove-Item -Path $tempOutFile -Force
         Write-Host "Results:"
         Write-Host $unitResults
 
@@ -387,7 +421,10 @@ else {
     elseif ($ConfigurationFile) {
         Write-Host "Running installation of configuration file: $($ConfigurationFile)"
 
-        $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -NoNewWindow -Wait -PassThru -ArgumentList $($mtaFlag), "-Command `"Get-WinGetConfiguration -File '$($ConfigurationFile)' | Invoke-WinGetConfiguration -AcceptConfigurationAgreements | Select-Object -ExpandProperty UnitResults | ConvertTo-Json -Depth 10 > $($tempOutFile)`""
+        $processCreation = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="C:\Program Files\PowerShell\7\pwsh.exe $($mtaFlag) -Command `"Get-WinGetConfiguration -File '$($ConfigurationFile)' | Invoke-WinGetConfiguration -AcceptConfigurationAgreements | Select-Object -ExpandProperty UnitResults | ConvertTo-Json -Depth 10 > $($tempOutFile)`""}
+        $process = Get-Process -Id $processCreation.ProcessId
+        $handle = $process.Handle # cache process.Handle so ExitCode isn't null when we need it below
+        $process.WaitForExit()
         $installExitCode = $process.ExitCode
         # read the output file and write it to the console
         $unitResults = Get-Content -Path $tempOutFile
