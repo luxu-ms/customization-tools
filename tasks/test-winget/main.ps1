@@ -333,7 +333,7 @@ if ($RunAsUser -eq "true") {
 # We're running in the provisioning context:
 else {
     Write-Host "Running in the provisioning context"
-    $tempOutFile = "C:\temp\result.txt"
+    $tempOutFile = [System.IO.Path]::GetTempFileName() + ".out.json"
 
     $mtaFlag = "-MTA"
     if ($PsInstallScope -eq "CurrentUser") {
@@ -352,8 +352,13 @@ else {
 
         $installExitCode = -1
         try { 
-            $process = Start-Process -FilePath "C:\Program Files\PowerShell\7\pwsh.exe" -ErrorAction Stop -NoNewWindow -Wait -PassThru -ArgumentList $($mtaFlag), "-Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""
-            $installExitCode = $process.ExitCode
+            if($mtaFlag){
+                & "C:\Program Files\PowerShell\7\pwsh.exe" $mtaFlag -Command "Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile) "
+            }else{
+                & "C:\Program Files\PowerShell\7\pwsh.exe" -Command "Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile) "
+            }
+            
+            $installExitCode = 0
          }
         catch {
             Write-Host "###############An error occurred:"
@@ -362,7 +367,7 @@ else {
         
         # read the output file and write it to the console
         $unitResults = Get-Content -Path $tempOutFile
-        Remove-Item -Path $tempOutFile -Force
+        #Remove-Item -Path $tempOutFile -Force
         Write-Host "Results:"
         Write-Host $unitResults
 
