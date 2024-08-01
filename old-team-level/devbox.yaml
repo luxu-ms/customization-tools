@@ -1,0 +1,23 @@
+name: devbox-customization
+image: MicrosoftVisualStudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2
+hostInformation: general_i_8c32gb256ssd_v2
+supportsHibernation: true
+setupTasks:
+  - task: testwinget
+    inputs:
+      package: Notepad++.Notepad++
+  - task: testwinget
+    inputs:
+      package: Mozilla.Firefox
+  - task: testwinget
+    inputs:
+      package: Google.Chrome
+  - task: testwinget
+    inputs:
+      package: Microsoft.VisualStudioCode
+      runAsUser: true
+  - task: testwinget
+    inputs:
+      package: Microsoft.SQLServer.2022.Developer
+      runAsUser: true
+      
