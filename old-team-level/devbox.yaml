@@ -14,7 +14,7 @@ setupTasks:
       package: Google.Chrome
   - task: testwinget
     inputs:
-      package: Microsoft.VisualStudioCode
+      package: Postman.Postman
       runAsUser: true
   - task: testwinget
     inputs:
