@@ -297,6 +297,28 @@ elseif ($DownloadUrl) {
     Write-Host "Downloaded configuration to: $($ConfigurationFile)"
 }
 
+function getProcessId($processCreation){
+    $timeoutDuration = 120
+    $startTime = Get-Date
+    $processId = "-1"
+    # Loop until the timeout is reached or process creation is confirmed  
+    while ((Get-Date) -lt $startTime.AddSeconds($timeoutDuration)) {  
+        try {      
+            # Check if processCreation and ProcessId are not null or empty  
+            if ($null -ne $processCreation -and $null -ne $processCreation.ProcessId -and $processCreation.ProcessId -ne '') {  
+                return $processCreation.ProcessId
+            }
+        } catch {  
+            Write-Output "Error occurred: $_. Exception.Message"  
+        }  
+    
+        # Wait for 1 second before checking again  
+        Start-Sleep -Seconds 1  
+    }
+
+    return $processId
+}
+
 $versionFlag = ""
 # We're running as user via scheduled task:
 if ($RunAsUser -eq "true") {
@@ -351,7 +373,12 @@ else {
         }
 
         $processCreation = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine="C:\Program Files\PowerShell\7\pwsh.exe $($mtaFlag) -Command `"Install-WinGetPackage -Id '$($Package)' $($versionFlag) | ConvertTo-Json -Depth 10 > $($tempOutFile)`""}
-        $process = Get-Process -Id $processCreation.ProcessId
+        $processId = getProcessId($processCreation)
+        if($processId -eq "-1"){
+            Write-Error "Failed to get process id"
+            exit 1
+        }
+        $process = Get-Process -Id $processId
         $handle = $process.Handle # cache process.Handle so ExitCode isn't null when we need it below
         $process.WaitForExit()
         $installExitCode = $process.ExitCode
