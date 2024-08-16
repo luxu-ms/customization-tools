@@ -8,6 +8,7 @@ tasks:
   - name: winget
     parameters:
       package: suse.RancherDesktop
+      runAsUser: true
   - name: choco
     parameters:
       package: docker-desktop
