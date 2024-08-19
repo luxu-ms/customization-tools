@@ -12,6 +12,9 @@ tasks:
   - name: choco
     parameters:
       package: docker-desktop
+  - name: powershell
+    parameters:
+      command: net localgroup docker-users 'NT AUTHORITY\Authenticated Users' /ADD
   - name: powershell-runas
     description: Admin cannot access wsl, so put the task to user level
     parameters:
