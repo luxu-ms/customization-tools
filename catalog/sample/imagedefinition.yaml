@@ -8,3 +8,7 @@ tasks:
     - name: devcenter-catalog/choco
       parameters:
         package: vscode.install
+    - name: devcenter-catalog/winget
+      parameters:
+        package: Postman.Postman
+        runAsUser: true
