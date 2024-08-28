@@ -8,3 +8,7 @@ tasks:
     - name: devcenter-catalog/choco
       parameters:
         package: vscode.install
+userTasks:
+    - name: devcenter-catalog/choco
+      parameters:
+        package: postman
