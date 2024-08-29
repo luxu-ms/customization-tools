@@ -2,13 +2,13 @@ $schema: 1.0
 name: project-sample-1
 image: MicrosoftWindowsDesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365
 tasks:
-    - name: devcenter-catalog/choco
-      parameters:
-        package: notepadplusplus.install
-    - name: devcenter-catalog/choco
-      parameters:
-        package: vscode.install
-    - name: devcenter-catalog/winget
-      parameters:
-        package: Postman.Postman
-        runAsUser: true
+  - name: devcenter-catalog/choco
+    parameters:
+      package: notepadplusplus.install
+  - name: devcenter-catalog/choco
+    parameters:
+      package: vscode.install
+  - name: devcenter-catalog/winget
+    parameters:
+      package: Postman.Postman
+      runAsUser: true
